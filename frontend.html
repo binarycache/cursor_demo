@@ -19,6 +19,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative;
         }
 
         .container {
@@ -194,6 +195,130 @@
             transform: translateX(0);
         }
 
+        /* Tic-Tac-Toe Game Styles */
+        .game-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 280px;
+            z-index: 1000;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .game-title {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .game-toggle {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .game-toggle:hover {
+            background: #5568d3;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .game-cell {
+            aspect-ratio: 1;
+            border: 2px solid #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .game-cell:hover:not(.disabled) {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        .game-cell.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .game-status {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
+        .game-status.winner {
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        .game-reset {
+            width: 100%;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .game-reset:hover {
+            background: #764ba2;
+        }
+
+        .game-collapsed {
+            width: auto;
+        }
+
+        .game-collapsed .game-board,
+        .game-collapsed .game-status,
+        .game-collapsed .game-reset {
+            display: none;
+        }
+
+        @media (max-width: 900px) {
+            .game-container {
+                position: relative;
+                top: 0;
+                right: 0;
+                width: 100%;
+                max-width: 280px;
+                margin: 0 auto 20px;
+            }
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 20px;
@@ -206,10 +331,36 @@
             h1 {
                 font-size: 1.5rem;
             }
+
+            .game-container {
+                width: 100%;
+                max-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Tic-Tac-Toe Game -->
+    <div class="game-container" id="gameContainer">
+        <div class="game-header">
+            <div class="game-title">🎮 Tic-Tac-Toe</div>
+            <button class="game-toggle" onclick="toggleGame()" id="gameToggle">−</button>
+        </div>
+        <div class="game-board" id="gameBoard">
+            <div class="game-cell" onclick="makeMove(0)"></div>
+            <div class="game-cell" onclick="makeMove(1)"></div>
+            <div class="game-cell" onclick="makeMove(2)"></div>
+            <div class="game-cell" onclick="makeMove(3)"></div>
+            <div class="game-cell" onclick="makeMove(4)"></div>
+            <div class="game-cell" onclick="makeMove(5)"></div>
+            <div class="game-cell" onclick="makeMove(6)"></div>
+            <div class="game-cell" onclick="makeMove(7)"></div>
+            <div class="game-cell" onclick="makeMove(8)"></div>
+        </div>
+        <div class="game-status" id="gameStatus">Your turn!</div>
+        <button class="game-reset" onclick="resetGame()">Reset Game</button>
+    </div>
+
     <div class="container">
         <h1>💰 Ethereum Converter</h1>
         <p class="subtitle">Convert between Wei, Gwei, and ETH</p>
@@ -338,6 +489,75 @@
                 convert();
             }
         });
+
+        // Tic-Tac-Toe Game Logic
+        let gameBoard = Array(9).fill('');
+        let currentPlayer = 'X';
+        let gameActive = true;
+
+        function makeMove(index) {
+            if (!gameActive || gameBoard[index] !== '') return;
+
+            gameBoard[index] = currentPlayer;
+            document.getElementById('gameBoard').children[index].textContent = currentPlayer;
+            document.getElementById('gameBoard').children[index].classList.add('disabled');
+
+            if (checkWinner()) {
+                document.getElementById('gameStatus').textContent = `${currentPlayer} wins!`;
+                document.getElementById('gameStatus').classList.add('winner');
+                gameActive = false;
+                disableAllCells();
+            } else if (gameBoard.every(cell => cell !== '')) {
+                document.getElementById('gameStatus').textContent = "It's a tie!";
+                gameActive = false;
+            } else {
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                document.getElementById('gameStatus').textContent = `${currentPlayer}'s turn`;
+            }
+        }
+
+        function checkWinner() {
+            const winningCombos = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                [0, 4, 8], [2, 4, 6] // Diagonals
+            ];
+
+            return winningCombos.some(combo => {
+                const [a, b, c] = combo;
+                return gameBoard[a] && 
+                       gameBoard[a] === gameBoard[b] && 
+                       gameBoard[a] === gameBoard[c];
+            });
+        }
+
+        function disableAllCells() {
+            const cells = document.querySelectorAll('.game-cell');
+            cells.forEach(cell => cell.classList.add('disabled'));
+        }
+
+        function resetGame() {
+            gameBoard = Array(9).fill('');
+            currentPlayer = 'X';
+            gameActive = true;
+            
+            const cells = document.getElementById('gameBoard').children;
+            for (let i = 0; i < cells.length; i++) {
+                cells[i].textContent = '';
+                cells[i].classList.remove('disabled');
+            }
+
+            document.getElementById('gameStatus').textContent = "Your turn!";
+            document.getElementById('gameStatus').classList.remove('winner');
+        }
+
+        function toggleGame() {
+            const gameContainer = document.getElementById('gameContainer');
+            const toggleButton = document.getElementById('gameToggle');
+            
+            gameContainer.classList.toggle('game-collapsed');
+            toggleButton.textContent = gameContainer.classList.contains('game-collapsed') ? '+' : '−';
+        }
     </script>
 </body>
 </html>
