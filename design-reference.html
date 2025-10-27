@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design System Reference - Ethereum Converter</title>
+    <style>
+        /* CSS Variables from Design System */
+        :root {
+            /* Colors */
+            --color-primary-start: #667eea;
+            --color-primary-end: #764ba2;
+            --color-primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            
+            --color-white: #ffffff;
+            --color-dark: #333333;
+            --color-medium: #666666;
+            --color-light: #e0e0e0;
+            --color-lighter: #f5f5f5;
+            --color-info-bg: #f8f9fa;
+            
+            --color-success: #4caf50;
+            --color-success-hover: #45a049;
+            
+            --color-focus: #667eea;
+            --color-focus-glow: rgba(102, 126, 234, 0.1);
+            
+            /* Typography */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            --font-mono: 'Courier New', monospace;
+            
+            --font-size-h1: 2rem;
+            --font-size-h3: 1rem;
+            --font-size-body: 1rem;
+            --font-size-subtitle: 0.95rem;
+            --font-size-label: 0.85rem;
+            --font-size-result: 1.5rem;
+            
+            --font-weight-bold: 600;
+            --font-weight-normal: 400;
+            
+            /* Spacing */
+            --spacing-xs: 5px;
+            --spacing-s: 10px;
+            --spacing-m: 15px;
+            --spacing-l: 20px;
+            --spacing-xl: 30px;
+            --spacing-xxl: 40px;
+            
+            /* Border Radius */
+            --radius-sm: 10px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            
+            /* Shadows */
+            --shadow-container: 0 20px 60px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 5px 15px rgba(102, 126, 234, 0.4);
+            --shadow-toast: 0 5px 15px rgba(0, 0, 0, 0.2);
+            
+            /* Transitions */
+            --transition-fast: 0.3s ease;
+            
+            /* Layout */
+            --container-max-width: 600px;
+            --container-padding: 40px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--color-primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-l);
+        }
+
+        .container {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-container);
+            padding: var(--container-padding);
+            max-width: var(--container-max-width);
+            width: 100%;
+        }
+
+        h1 {
+            color: var(--color-dark);
+            margin-bottom: var(--spacing-s);
+            font-size: var(--font-size-h1);
+            text-align: center;
+        }
+
+        .subtitle {
+            color: var(--color-medium);
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            font-size: var(--font-size-subtitle);
+        }
+
+        .input-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .input-group {
+            display: flex;
+            gap: var(--spacing-s);
+            margin-bottom: var(--spacing-l);
+        }
+
+        input[type="number"], input[type="text"] {
+            flex: 1;
+            padding: var(--spacing-m);
+            border: 2px solid var(--color-light);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-body);
+            transition: all var(--transition-fast);
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--color-focus);
+            box-shadow: 0 0 0 3px var(--color-focus-glow);
+        }
+
+        select {
+            padding: var(--spacing-m) var(--spacing-l);
+            border: 2px solid var(--color-light);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-body);
+            background: var(--color-white);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--color-focus);
+        }
+
+        .results {
+            display: grid;
+            gap: var(--spacing-m);
+        }
+
+        .result-card {
+            background: var(--color-primary-gradient);
+            padding: var(--spacing-l);
+            border-radius: var(--radius-md);
+            color: var(--color-white);
+        }
+
+        .result-label {
+            font-size: var(--font-size-label);
+            opacity: 0.9;
+            margin-bottom: var(--spacing-xs);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-value {
+            font-size: var(--font-size-result);
+            font-weight: var(--font-weight-bold);
+            word-break: break-all;
+            font-family: var(--font-mono);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-s);
+            margin-top: var(--spacing-l);
+        }
+
+        button {
+            flex: 1;
+            padding: var(--spacing-m);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-body);
+            font-weight: var(--font-weight-bold);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-convert {
+            background: var(--color-primary-gradient);
+            color: var(--color-white);
+        }
+
+        .btn-convert:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-clear {
+            background: var(--color-lighter);
+            color: var(--color-dark);
+        }
+
+        .btn-clear:hover {
+            background: var(--color-light);
+        }
+
+        .btn-copy {
+            background: var(--color-success);
+            color: var(--color-white);
+        }
+
+        .btn-copy:hover {
+            background: var(--color-success-hover);
+        }
+
+        .info-box {
+            background: var(--color-info-bg);
+            padding: var(--spacing-m);
+            border-radius: var(--radius-sm);
+            margin-top: var(--spacing-l);
+            font-size: 0.9rem;
+            color: var(--color-medium);
+        }
+
+        .info-box h3 {
+            margin-bottom: var(--spacing-s);
+            color: var(--color-dark);
+            font-size: var(--font-size-h3);
+        }
+
+        .conversion-rates {
+            display: grid;
+            gap: 8px;
+            font-family: var(--font-mono);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: var(--spacing-l);
+            right: var(--spacing-l);
+            background: var(--color-success);
+            color: var(--color-white);
+            padding: var(--spacing-m) calc(var(--spacing-l) + 5px);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-toast);
+            transform: translateX(400px);
+            transition: transform var(--transition-fast);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 600px) {
+            :root {
+                --container-padding: var(--spacing-l);
+                --font-size-h1: 1.5rem;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💰 Ethereum Converter</h1>
+        <p class="subtitle">Convert between Wei, Gwei, and ETH</p>
+
+        <div class="input-section">
+            <div class="input-group">
+                <input type="number" id="amount" placeholder="Enter amount" step="any">
+                <select id="unit">
+                    <option value="wei">Wei</option>
+                    <option value="gwei" selected>Gwei</option>
+                    <option value="eth">ETH</option>
+                </select>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-convert" onclick="convert()">Convert</button>
+                <button class="btn-clear" onclick="clearInputs()">Clear</button>
+            </div>
+        </div>
+
+        <div id="results" class="results" style="display: none;">
+            <div class="result-card">
+                <div class="result-label">Wei</div>
+                <div class="result-value" id="result-wei"></div>
+                <button class="btn-copy" onclick="copyToClipboard('result-wei')" style="margin-top: var(--spacing-s); padding: 8px; font-size: 0.9rem;">Copy</button>
+            </div>
+            <div class="result-card">
+                <div class="result-label">Gwei</div>
+                <div class="result-value" id="result-gwei"></div>
+                <button class="btn-copy" onclick="copyToClipboard('result-gwei')" style="margin-top: var(--spacing-s); padding: 8px; font-size: 0.9rem;">Copy</button>
+            </div>
+            <div class="result-card">
+                <div class="result-label">ETH</div>
+                <div class="result-value" id="result-eth"></div>
+                <button class="btn-copy" onclick="copyToClipboard('result-eth')" style="margin-top: var(--spacing-s); padding: 8px; font-size: 0.9rem;">Copy</button>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3>📚 Conversion Rates</h3>
+            <div class="conversion-rates">
+                <div>1 ETH = 1,000,000,000 Gwei (10⁹)</div>
+                <div>1 ETH = 1,000,000,000,000,000,000 Wei (10¹⁸)</div>
+                <div>1 Gwei = 1,000,000,000 Wei (10⁹)</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Copied to clipboard!</div>
+
+    <script>
+        const WEI_PER_GWEI = 1_000_000_000;
+        const WEI_PER_ETH = 1_000_000_000_000_000_000;
+
+        function formatDecimal(value, decimals = 18) {
+            const formatted = value.toFixed(decimals).replace(/\.?0+$/, '');
+            return formatted || '0';
+        }
+
+        function convert() {
+            const amountInput = document.getElementById('amount');
+            const unit = document.getElementById('unit').value;
+            const amount = amountInput.value;
+
+            if (!amount) {
+                alert('Please enter an amount');
+                return;
+            }
+
+            const amountFloat = parseFloat(amount);
+            
+            if (isNaN(amountFloat)) {
+                alert('Please enter a valid number');
+                return;
+            }
+
+            let weiValue;
+            if (unit === 'wei') {
+                weiValue = BigInt(amount);
+            } else if (unit === 'gwei') {
+                weiValue = BigInt(Math.floor(amountFloat * WEI_PER_GWEI));
+            } else if (unit === 'eth') {
+                weiValue = BigInt(Math.floor(amountFloat * WEI_PER_ETH));
+            }
+
+            const gweiValue = Number(weiValue) / WEI_PER_GWEI;
+            const ethValue = Number(weiValue) / WEI_PER_ETH;
+
+            document.getElementById('result-wei').textContent = weiValue.toString();
+            document.getElementById('result-gwei').textContent = formatDecimal(gweiValue);
+            document.getElementById('result-eth').textContent = formatDecimal(ethValue);
+
+            document.getElementById('results').style.display = 'grid';
+        }
+
+        function clearInputs() {
+            document.getElementById('amount').value = '';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('amount').focus();
+        }
+
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast();
+            });
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        document.getElementById('amount').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                convert();
+            }
+        });
+    </script>
+</body>
+</html>
+

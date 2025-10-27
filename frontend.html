@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum Value Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="number"], input[type="text"] {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        select {
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .results {
+            display: grid;
+            gap: 15px;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+        }
+
+        .result-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-convert {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-convert:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-clear {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .btn-clear:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-copy {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-copy:hover {
+            background: #45a049;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .info-box h3 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .conversion-rates {
+            display: grid;
+            gap: 8px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💰 Ethereum Converter</h1>
+        <p class="subtitle">Convert between Wei, Gwei, and ETH</p>
+
+        <div class="input-section">
+            <div class="input-group">
+                <input type="number" id="amount" placeholder="Enter amount" step="any">
+                <select id="unit">
+                    <option value="wei">Wei</option>
+                    <option value="gwei" selected>Gwei</option>
+                    <option value="eth">ETH</option>
+                </select>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-convert" onclick="convert()">Convert</button>
+                <button class="btn-clear" onclick="clearInputs()">Clear</button>
+            </div>
+        </div>
+
+        <div id="results" class="results" style="display: none;">
+            <div class="result-card">
+                <div class="result-label">Wei</div>
+                <div class="result-value" id="result-wei"></div>
+                <button class="btn-copy" onclick="copyToClipboard('result-wei')" style="margin-top: 10px; padding: 8px; font-size: 0.9rem;">Copy</button>
+            </div>
+            <div class="result-card">
+                <div class="result-label">Gwei</div>
+                <div class="result-value" id="result-gwei"></div>
+                <button class="btn-copy" onclick="copyToClipboard('result-gwei')" style="margin-top: 10px; padding: 8px; font-size: 0.9rem;">Copy</button>
+            </div>
+            <div class="result-card">
+                <div class="result-label">ETH</div>
+                <div class="result-value" id="result-eth"></div>
+                <button class="btn-copy" onclick="copyToClipboard('result-eth')" style="margin-top: 10px; padding: 8px; font-size: 0.9rem;">Copy</button>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3>📚 Conversion Rates</h3>
+            <div class="conversion-rates">
+                <div>1 ETH = 1,000,000,000 Gwei (10⁹)</div>
+                <div>1 ETH = 1,000,000,000,000,000,000 Wei (10¹⁸)</div>
+                <div>1 Gwei = 1,000,000,000 Wei (10⁹)</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Copied to clipboard!</div>
+
+    <script>
+        const WEI_PER_GWEI = 1_000_000_000;
+        const WEI_PER_ETH = 1_000_000_000_000_000_000;
+        const GWEI_PER_ETH = 1_000_000_000;
+
+        function formatDecimal(value, decimals = 18) {
+            const formatted = value.toFixed(decimals).replace(/\.?0+$/, '');
+            return formatted || '0';
+        }
+
+        function convert() {
+            const amountInput = document.getElementById('amount');
+            const unit = document.getElementById('unit').value;
+            const amount = amountInput.value;
+
+            if (!amount) {
+                alert('Please enter an amount');
+                return;
+            }
+
+            const amountFloat = parseFloat(amount);
+            
+            // Validate input
+            if (isNaN(amountFloat)) {
+                alert('Please enter a valid number');
+                return;
+            }
+
+            // Convert to Wei (canonical format)
+            let weiValue;
+            if (unit === 'wei') {
+                weiValue = BigInt(amount);
+            } else if (unit === 'gwei') {
+                weiValue = BigInt(Math.floor(amountFloat * WEI_PER_GWEI));
+            } else if (unit === 'eth') {
+                weiValue = BigInt(Math.floor(amountFloat * WEI_PER_ETH));
+            }
+
+            // Convert to Gwei
+            const gweiValue = Number(weiValue) / WEI_PER_GWEI;
+
+            // Convert to ETH
+            const ethValue = Number(weiValue) / WEI_PER_ETH;
+
+            // Display results
+            document.getElementById('result-wei').textContent = weiValue.toString();
+            document.getElementById('result-gwei').textContent = formatDecimal(gweiValue);
+            document.getElementById('result-eth').textContent = formatDecimal(ethValue);
+
+            document.getElementById('results').style.display = 'grid';
+        }
+
+        function clearInputs() {
+            document.getElementById('amount').value = '';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('amount').focus();
+        }
+
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast();
+            });
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // Allow Enter key to convert
+        document.getElementById('amount').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                convert();
+            }
+        });
+    </script>
+</body>
+</html>
+

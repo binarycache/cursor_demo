@@ -1,15 +1,15 @@
 {
-    "version": 1,
-    "hooks": {
-      "beforeShellExecution": [
-        {
-          "command": "./hooks/block-git.sh"
-        }
-      ],
-      "beforeMCPExecution": [
-        {
-          "command": "./hooks/block-git.sh"
-        }
-      ]
-    }
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": "./hooks/block-git.sh"
+      }
+    ],
+    "beforeMCPExecution": [
+      {
+        "command": "./hooks/block-git.sh"
+      }
+    ]
   }
+}

@@ -10,6 +10,7 @@ A Python utility for converting Ethereum values between Wei, Gwei, and ETH forma
 - Returns all three formats simultaneously
 - Type-safe with proper type hints
 - Comprehensive unit tests
+- **Beautiful web frontend interface**
 
 ## Installation
 
@@ -19,6 +20,26 @@ pip install -r requirements.txt
 ```
 
 ## Usage
+
+### Web Frontend (Recommended)
+
+Simply open `frontend.html` in your web browser:
+
+```bash
+# On macOS/Linux
+open frontend.html
+
+# On Windows
+start frontend.html
+
+# Or just drag and drop the file into your browser
+```
+
+The web interface provides:
+- 🎨 Beautiful, modern UI
+- ⚡ Real-time conversions
+- 📋 One-click copy to clipboard
+- 📱 Responsive design
 
 ### As a Python Module
 
